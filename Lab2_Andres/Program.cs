@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Lab2_Andres
 {
@@ -6,7 +8,11 @@ namespace Lab2_Andres
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            School menu = new();
+
+            menu.MainMenu();
         }
-    }
+
+    } // class ends
 }
+
