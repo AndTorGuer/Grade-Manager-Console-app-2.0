@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-namespace lab2_Andres
+
+namespace Lab2_Andres
 {
     public class Classroom : School // inherit from this class to be able to use it's properties                  
     {
