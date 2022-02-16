@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 namespace Lab2_Andres
 {
     public class Classroom : School // inherit from this class to be able to use it's properties                  
@@ -22,19 +21,32 @@ namespace Lab2_Andres
         public static void AddStudent(string aClassroom) //another way to do it
         {
             Console.Clear();
-            // to get the name of the student from input
-            Console.WriteLine("Enter the Student name:");
-            string studentName = Console.ReadLine().ToUpper();
+            try //we are using try catch to get any errors/exceptions when we run the following code
+            {
+                string studentName = "";
+                while (studentName is "" or null)
+                {
+                    Console.Clear();
+                    // to get the name of the student from input
+                    Console.WriteLine("Enter the Student name:");
+                    studentName = Console.ReadLine().ToUpper();
+                }
+                // to instanciate an object and give it a name
+                Student newStudent = new Student(studentName);
 
-            // to instanciate an object and give it a name
-            Student newStudent = new Student(studentName);
+                // to get the actual classroom we are working on
+                Classroom currentClassroom = classrooms[aClassroom];
 
-            // to get the actual classroom we are working on
-            Classroom currentClassroom = classrooms[aClassroom];
-
-            // to add the item/student to the dictionary
-            // I'm associating the student to the classroom because of dictionary key/value  
-            currentClassroom.students.Add(newStudent.Name, newStudent);
+                // to add the item/student to the dictionary
+                // I'm associating the student to the classroom because of dictionary key/value  
+                currentClassroom.students.Add(newStudent.Name, newStudent);
+            }
+            catch (Exception e) // catches the error and returns to menu
+            {
+                Console.WriteLine(e.Message); // Prints an error message of what went wrong
+                Console.WriteLine("Press any key to continue:");
+                Console.ReadKey();
+            }
         } // AddStudent
 
         public static void ShowClassroomStudents(string aClassroom)
@@ -239,13 +251,14 @@ namespace Lab2_Andres
         // Menu Method
         public void StudentMenu(string classroomName)
         {
-
-            bool back = true; //feature 08 - Exit
-            do
+            try
             {
-                Console.Clear();
-                Console.WriteLine("Classroom: " + classroomName);
-                Console.WriteLine(@"Select from the following options
+                bool back = true; //feature 08 - Exit
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine("Classroom: " + classroomName);
+                    Console.WriteLine(@"Select from the following options
 
 Option 1: Add Student
 Option 2: Show Students
@@ -259,54 +272,62 @@ Option 9: Back to main menu
 
 Make selection:");
 
-                string input = Console.ReadLine();
+                    string input = Console.ReadLine();
 
-                int selection;
-                try
-                {
-                    selection = int.Parse(input);
-                }
-                catch (Exception e) // catches the error and returns to main menu
-                {
-                    Console.WriteLine(e.Message); // Prints an error message of what went wrong       
-                    continue;
-                }
-
-                switch (selection)
-                {
-                    case 1:
-                        AddStudent(classroomName);
-                        break;
-                    case 2:
-                        ShowClassroomStudents(classroomName);
-                        break;
-                    case 3:
-                        RemoveStudent(); //feature 0 - remove student
-                        break;
-                    case 4:
-                        Student.StudentDetailsSub(classroomName);  //feature 0 - student details
-                        break;
-                    case 5:
-                        CompareStudent(); //feature 0 - compare students
-                        break;
-                    case 6:
-                        ShowClassroomAvgGrade(classroomName); //feature 0 - show average grade
-                        break;
-                    case 7:
-                        BestStudent();  //feature 0 - best student
-                        break;
-                    case 8:
-                        WorstStudent();  //feature 0 - worst student
-                        break;
-                    case 9:
-                        back = false; //feature 08 - Exit
-                        break;
-                    default: //handles exceptions were the user selection was invalid and brings up the menu
-                        Console.WriteLine("Invalid entry");
+                    int selection;
+                    try
+                    {
+                        selection = int.Parse(input);
+                    }
+                    catch (Exception e) // catches the error and returns to main menu
+                    {
+                        Console.WriteLine(e.Message); // Prints an error message of what went wrong       
                         continue;
-                }
-            } while (back); //feature 08 - Exit
+                    }
+
+                    switch (selection)
+                    {
+                        case 1:
+                            AddStudent(classroomName);
+                            break;
+                        case 2:
+                            ShowClassroomStudents(classroomName);
+                            break;
+                        case 3:
+                            RemoveStudent(); //feature 0 - remove student
+                            break;
+                        case 4:
+                            Student.StudentDetailsSub(classroomName);  //feature 0 - student details
+                            break;
+                        case 5:
+                            CompareStudent(); //feature 0 - compare students
+                            break;
+                        case 6:
+                            ShowClassroomAvgGrade(classroomName); //feature 0 - show average grade
+                            break;
+                        case 7:
+                            BestStudent();  //feature 0 - best student
+                            break;
+                        case 8:
+                            WorstStudent();  //feature 0 - worst student
+                            break;
+                        case 9:
+                            back = false; //feature 08 - Exit
+                            break;
+                        default: //handles exceptions were the user selection was invalid and brings up the menu
+                            Console.WriteLine("Invalid entry");
+                            continue;
+                    }//switch
+                } while (back); //feature 08 - Exit
+            }//try
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Press any key to continue:");
+                Console.ReadKey();
+            }//catch
         }// studentMenu
 
     } // class
 } // namespace
+

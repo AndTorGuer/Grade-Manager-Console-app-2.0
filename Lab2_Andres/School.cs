@@ -13,11 +13,13 @@ namespace Lab2_Andres
 
         public void MainMenu()
         {
-            bool exit = true; //feature 08 - Exit
-            do
+            try
             {
-                Console.Clear();
-                Console.WriteLine(@"Grade Manager 2.0
+                bool exit = true; //feature 08 - Exit
+                do
+                {
+                    Console.Clear();
+                    Console.WriteLine(@"Grade Manager 2.0
 Select from the following options
 
 Option 1: Add Classroom
@@ -27,42 +29,49 @@ Option 4: Classroom Details
 Option 5: Exit
 
 Make selection:");
-                string input = Console.ReadLine();
+                    string input = Console.ReadLine();
 
-                int selection;
-                try
-                {
-                    selection = int.Parse(input);
-                }
-                catch (Exception e) // catches the error and returns to main menu
-                {
-                    Console.WriteLine(e.Message); // Prints an error message of what went wrong       
-                    continue;
-                }
+                    int selection;
+                    try
+                    {
+                        selection = int.Parse(input);
+                    }
+                    catch (Exception e) // catches the error and returns to main menu
+                    {
+                        Console.WriteLine(e.Message); // Prints an error message of what went wrong       
+                        continue;
+                    }
 
-                switch (selection)
-                {
-                    case 1:
-                        AddClassroom(); //feature 00 - Add classrooms
-                        break;
-                    case 2:
-                        ShowClassrooms(); //feature 01 - Show classrooms
-                        break;
-                    case 3:
-                        RemoveClassroom(); //feature 02 - remove classroom
-                        break;
-                    case 4:
-                        ClassroomDetails();
-                        break;
-                    case 5:
-                        exit = false; //feature 08 - Exit
-                        Console.Write("Exiting app..");
-                        break;
-                    default: //handles exceptions were the user selection was invalid and brings up the main menu
-                        Console.WriteLine("Invalid entry");
-                        break;
-                }
-            } while (exit); //feature 08 - Exit
+                    switch (selection)
+                    {
+                        case 1:
+                            AddClassroom(); //feature 00 - Add classrooms
+                            break;
+                        case 2:
+                            ShowClassrooms(); //feature 01 - Show classrooms
+                            break;
+                        case 3:
+                            RemoveClassroom(); //feature 02 - remove classroom
+                            break;
+                        case 4:
+                            ClassroomDetails();
+                            break;
+                        case 5:
+                            Console.Write("Exiting app..");
+                            Environment.Exit(0);
+                            break;
+                        default: //handles exceptions were the user selection was invalid and brings up the main menu
+                            Console.WriteLine("Invalid entry");
+                            continue;
+                    }
+                } while (exit); //feature 08 - Exit
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Press any key to continue:");
+                Console.ReadKey();
+            }//catch
         } // mainMenu()
 
         public static void AddClassroom() // method to add a classroom to the dictionary
@@ -70,9 +79,13 @@ Make selection:");
             Console.Clear();
             try //we are using try catch to get any errors/exceptions when we run the following code
             {
-                Console.WriteLine("Enter the Classroom Name:");
-                string classroomName = Console.ReadLine().ToUpper();
-
+                string classroomName = "";
+                while (classroomName is "" or null)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Enter the Classroom Name:");
+                    classroomName = Console.ReadLine().ToUpper();
+                }
                 classrooms.Add(classroomName, new Classroom(classroomName)); // adds a classroom to the list
             }
             catch (Exception e) // catches the error and returns to menu
@@ -133,24 +146,33 @@ Make selection:");
         public void ClassroomDetails()
         {
             Console.Clear();
-            Console.WriteLine("Classrooms list:");
-            foreach (KeyValuePair<string, Classroom> kvp in classrooms) // use this to show the list of classrooms stored
+            try
             {
-                Console.WriteLine(kvp.Key); // here I just want to show the names for classrooms
+                Console.WriteLine("Classrooms list:");
+                foreach (KeyValuePair<string, Classroom> kvp in classrooms) // use this to show the list of classrooms stored
+                {
+                    Console.WriteLine(kvp.Key); // here I just want to show the names for classrooms
+                }
+
+                Console.WriteLine("\nEnter the Classroom name to see details:");
+                string classroomName = Console.ReadLine().ToUpper();
+
+                Classroom currentClassroom = classrooms[classroomName];
+
+                if (classrooms.ContainsKey(classroomName))
+                {
+                    currentClassroom.StudentMenu(classroomName); // nested method
+                }
+                else
+                {
+                    MainMenu();
+                }
             }
-
-            Console.WriteLine("\nEnter the Classroom name to see details:");
-            string classroomName = Console.ReadLine().ToUpper();
-
-            Classroom currentClassroom = classrooms[classroomName];
-
-            if (classrooms.ContainsKey(classroomName))
+            catch (Exception e)
             {
-                currentClassroom.StudentMenu(classroomName); // nested method
-            }
-            else
-            {
-                MainMenu();
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Press any key to continue:");
+                Console.ReadKey();
             }
         } // classroomDetails()
 
